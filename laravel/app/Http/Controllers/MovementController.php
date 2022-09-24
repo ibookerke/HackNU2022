@@ -10,7 +10,7 @@ class MovementController extends Controller
     const ValueY = 'y-value';
     const Floor = 'floor';
 
-    const BaseMove = 1;
+    const BaseMove = 6;
 
     public int $xMax;
     public int $xMin;
@@ -38,11 +38,6 @@ class MovementController extends Controller
         $this->floorHeight = 6;
         $this->resetChangeCache();
 
-
-        $lala = $this->fillMovements($name);
-
-        dd($lala);
-
         return view('welcome');
     }
 
@@ -59,6 +54,7 @@ class MovementController extends Controller
 
         $movements[1][self::ValueX] = $firstMove[self::ValueX];
         $movements[1][self::ValueY] = $firstMove[self::ValueY];
+        $movements[1]['timestamp'] = $movements[0]['timestamp']->addSeconds(5);
 
         //populating movements array
         for ($i = 2; $i < 10; $i++) {
@@ -84,6 +80,7 @@ class MovementController extends Controller
             $movements[$i][self::ValueY] = $nextLocation[self::ValueY];
             $movements[$i]['floor_label'] = $nextLocation[self::Floor];
             $movements[$i]['altitude'] = $movements[$i]['floor_label'] * $this->floorHeight;
+            $movements[$i]['timestamp'] = $movements[$i - 1]['timestamp']->addSeconds(5);
         }
 
         return $movements;
@@ -102,7 +99,8 @@ class MovementController extends Controller
             'h_accuracy' => 20,
             'v_accuracy' => 2.5,
             'accuracy_confidence' => 0.6827,
-            'activity' => 'walking'
+            'activity' => 'walking',
+            'timestamp' => now()
         ];
     }
 
@@ -129,7 +127,7 @@ class MovementController extends Controller
             return $this->changeDirection($prevPoint, $currentPoint);
         }
 
-        if(mt_rand(0, 1) == 1) {
+        if(mt_rand(1, 8) == 1) {
             return $this->changeDirection($prevPoint, $currentPoint);
         }
 
@@ -179,12 +177,7 @@ class MovementController extends Controller
             $newY -= self::BaseMove;
         }
 
-        dd($currentPoint, array(
-            self::ValueX => $newX,
-            self::ValueY => $newY,
-            self::Floor => $currentPoint[self::Floor]
-        ));
-
+        $this->resetChangeCache();
         return [
             self::ValueX => $newX,
             self::ValueY => $newY,
@@ -196,20 +189,27 @@ class MovementController extends Controller
     {
         $direction = 0;
 
-        if($currentPoint[$axis] >= $prevPoint[$axis]) {
-            if($this->changeDirectionCache[$axis]['positive']) {
-                $direction = 1;
-            }
-            else if($this->changeDirectionCache[$axis]['negative']){
-                $direction = -1;
+        if (mt_rand(1, 5) == 1) {
+            if($this->changeDirectionCache[$axis]['positive'] && $this->changeDirectionCache[$axis]['negative']) {
+                $direction = rand(0, 1) ? 1 : -1;
             }
         }
         else{
-            if($this->changeDirectionCache[$axis]['negative']){
-                $direction = -1;
+            if($currentPoint[$axis] >= $prevPoint[$axis]) {
+                if($this->changeDirectionCache[$axis]['positive']) {
+                    $direction = 1;
+                }
+                else if($this->changeDirectionCache[$axis]['negative']){
+                    $direction = -1;
+                }
             }
-            else if($this->changeDirectionCache[$axis]['positive']) {
-                $direction = 1;
+            else{
+                if($this->changeDirectionCache[$axis]['negative']){
+                    $direction = -1;
+                }
+                else if($this->changeDirectionCache[$axis]['positive']) {
+                    $direction = 1;
+                }
             }
         }
 
