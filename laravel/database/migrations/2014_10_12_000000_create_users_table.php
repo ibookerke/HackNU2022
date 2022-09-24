@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('age');
-            $table->string('wealth_category');
+            $table->integer('wealth_category');
             $table->integer('gender');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
