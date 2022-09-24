@@ -14,4 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [MovementController::class, 'run']);
+Route::get('/', [MovementController::class, 'index']);
+
+Route::get('/generate', [MovementController::class, 'run']);

@@ -25,29 +25,34 @@ class MovementController extends Controller
 
     public array $changeDirectionCache;
 
+    public function index()
+    {
+        return view('welcome');
+    }
+
     public function run()
     {
-//        $this->xMax = 100;
-//        $this->xMin = 0;
-//
-//        $this->yMax = 100;
-//        $this->yMin = 0;
-//
-//        $this->maxFloor = 4;
-//        $this->floorHeight = 6;
-//
-//        $this->changeDirectionCache = [];
-//        $this->resetChangeCache();
-//
-//        $users = User::all();
-//
-//        foreach ($users as $user) {
-//            $movements = $this->fillMovements($user);
-//            Movement::query()
-//                ->insert($movements);
-//        }
+        $this->xMax = 100;
+        $this->xMin = 0;
 
-        return view('welcome');
+        $this->yMax = 100;
+        $this->yMin = 0;
+
+        $this->maxFloor = 4;
+        $this->floorHeight = 6;
+
+        $this->changeDirectionCache = [];
+        $this->resetChangeCache();
+
+        $users = User::all();
+
+        foreach ($users as $user) {
+            $movements = $this->fillMovements($user);
+            Movement::query()
+                ->insert($movements);
+        }
+
+        return "data successfully generated";
     }
 
     public function fillMovements($user): array
