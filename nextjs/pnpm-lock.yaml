@@ -6,6 +6,7 @@ specifiers:
   '@chakra-ui/styled-system': ^2.3.3
   '@emotion/react': ^11.10.4
   '@emotion/styled': ^11.10.4
+  '@tanstack/react-query': ^4.3.9
   eslint: 8.23.1
   eslint-config-next: 12.3.1
   framer-motion: ^7.3.6
@@ -20,6 +21,7 @@ dependencies:
   '@chakra-ui/styled-system': 2.3.3
   '@emotion/react': 11.10.4_3toe27fv7etiytxb5kxc7fxaw4
   '@emotion/styled': 11.10.4_k7zxc7pbeddco7wpd4ecxszsyi
+  '@tanstack/react-query': 4.3.9_biqbaboplfbrettd7655fr4n2y
   framer-motion: 7.3.6_biqbaboplfbrettd7655fr4n2y
   next: 12.3.1_ir3quccc6i62x6qn6jjhyjjiey
   react: 18.2.0
@@ -1681,6 +1683,28 @@ packages:
     resolution: {integrity: sha512-rEUrBSGIoSFuYxwBYtlUFMlE2CwGhmW+w9355/5oduSw8e5h2+Tj4UrAGNNgP9915++wj5vkQo0UuOBqOAq4nw==}
     dependencies:
       tslib: 2.4.0
+    dev: false
+
+  /@tanstack/query-core/4.3.8:
+    resolution: {integrity: sha512-AEUWtCNBIImFZ9tMt/P8V86kIhMHpfoJqAI1auGOLR8Wzeq7Ymiue789PJG0rKYcyViUicBZeHjggMqyEQVMfQ==}
+    dev: false
+
+  /@tanstack/react-query/4.3.9_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-odfDW6WiSntCsCh+HFeJtUys3UnVOjfJMhykAtGtYvcklMyyDmCv9BVBt5KlSpbk/qW3kURPFCDapO+BFUlCwg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@tanstack/query-core': 4.3.8
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
   /@types/json5/0.0.29:
