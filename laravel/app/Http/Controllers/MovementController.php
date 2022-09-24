@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Movement;
+use App\Models\User;
 
 class MovementController extends Controller
 {
-    const ValueX = 'x-value';
-    const ValueY = 'y-value';
+    const ValueX = 'x_value';
+    const ValueY = 'y_value';
     const Floor = 'floor';
 
     const BaseMove = 6;
@@ -24,29 +25,35 @@ class MovementController extends Controller
 
     public function run()
     {
-        $name = 'Moora';
-
         $this->xMax = 100;
         $this->xMin = 0;
 
         $this->yMax = 100;
         $this->yMin = 0;
 
-        $this->changeDirectionCache = [];
-
         $this->maxFloor = 4;
         $this->floorHeight = 6;
+
+        $this->changeDirectionCache = [];
         $this->resetChangeCache();
+
+        $users = User::all();
+
+        foreach ($users as $user) {
+            $movements = $this->fillMovements($user);
+            Movement::query()
+                ->insert($movements);
+        }
 
         return view('welcome');
     }
 
-    public function fillMovements($name): array
+    public function fillMovements($user): array
     {
         $movements = [];
 
         //initial position
-        $movements[0] = $this->setInitialPosition($name);
+        $movements[0] = $this->setInitialPosition($user);
         $movements[1] = $movements[0];
 
         //making first move towards inner part of building
@@ -54,10 +61,11 @@ class MovementController extends Controller
 
         $movements[1][self::ValueX] = $firstMove[self::ValueX];
         $movements[1][self::ValueY] = $firstMove[self::ValueY];
-        $movements[1]['timestamp'] = $movements[0]['timestamp']->addSeconds(5);
+        $movements[1]['timestamp'] = clone $movements[0]['timestamp'];
+        $movements[1]['timestamp']->addSeconds(5);
 
         //populating movements array
-        for ($i = 2; $i < 10; $i++) {
+        for ($i = 2; $i < 100; $i++) {
             //copying initial data
             $movements[$i] = $movements[0];
 
@@ -80,13 +88,14 @@ class MovementController extends Controller
             $movements[$i][self::ValueY] = $nextLocation[self::ValueY];
             $movements[$i]['floor_label'] = $nextLocation[self::Floor];
             $movements[$i]['altitude'] = $movements[$i]['floor_label'] * $this->floorHeight;
-            $movements[$i]['timestamp'] = $movements[$i - 1]['timestamp']->addSeconds(5);
+            $movements[$i]['timestamp'] = clone $movements[$i - 1]['timestamp'];
+            $movements[$i]['timestamp']->addSeconds(5);
         }
 
         return $movements;
     }
 
-    public function setInitialPosition($name): array
+    public function setInitialPosition($user): array
     {
         return [
             'latitude' => 0,// convert to latitude
@@ -94,13 +103,14 @@ class MovementController extends Controller
             'longitude' => 0, // random longitude
             self::ValueY => mt_rand($this->yMin, $this->yMax),
             'altitude' => 0, // random alt
-            'identifier' => $name,
+            'identifier' => $user->name,
             'floor_label' => mt_rand(1, $this->maxFloor),
             'h_accuracy' => 20,
             'v_accuracy' => 2.5,
             'accuracy_confidence' => 0.6827,
             'activity' => 'walking',
-            'timestamp' => now()
+            'timestamp' => now(),
+            'user_id' => $user->id
         ];
     }
 
@@ -131,7 +141,7 @@ class MovementController extends Controller
             return $this->changeDirection($prevPoint, $currentPoint);
         }
 
-        if(mt_rand(0, 10) == 1) {
+        if(mt_rand(0, 1) == 1) {
             $next_location[self::Floor] = $currentPoint[self::Floor] + $this->changeFloor($prevPoint, $currentPoint);
         }
 
@@ -261,5 +271,11 @@ class MovementController extends Controller
             self::ValueX => $currentPoint[self::ValueX] + $xDiff,
             self::ValueY => $currentPoint[self::ValueY] + $yDiff
         ];
+    }
+
+
+    public function fetchHeatMapData()
+    {
+
     }
 }
