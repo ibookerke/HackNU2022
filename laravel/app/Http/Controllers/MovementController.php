@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\WealthCategories;
 use App\Models\Movement;
 use App\Models\User;
+use Carbon\Carbon;
 
 class MovementController extends Controller
 {
@@ -25,25 +27,25 @@ class MovementController extends Controller
 
     public function run()
     {
-        $this->xMax = 100;
-        $this->xMin = 0;
-
-        $this->yMax = 100;
-        $this->yMin = 0;
-
-        $this->maxFloor = 4;
-        $this->floorHeight = 6;
-
-        $this->changeDirectionCache = [];
-        $this->resetChangeCache();
-
-        $users = User::all();
-
-        foreach ($users as $user) {
-            $movements = $this->fillMovements($user);
-            Movement::query()
-                ->insert($movements);
-        }
+//        $this->xMax = 100;
+//        $this->xMin = 0;
+//
+//        $this->yMax = 100;
+//        $this->yMin = 0;
+//
+//        $this->maxFloor = 4;
+//        $this->floorHeight = 6;
+//
+//        $this->changeDirectionCache = [];
+//        $this->resetChangeCache();
+//
+//        $users = User::all();
+//
+//        foreach ($users as $user) {
+//            $movements = $this->fillMovements($user);
+//            Movement::query()
+//                ->insert($movements);
+//        }
 
         return view('welcome');
     }
@@ -276,6 +278,32 @@ class MovementController extends Controller
 
     public function fetchHeatMapData()
     {
+        $movementsByUser = Movement::query()
+            ->select('user_id', 'x_value', 'y_value', 'floor_label', 'timestamp')
+            ->orderBy('timestamp')
+            // floor filter
+//            ->where('floor_label', 1)
+            // timestamp filter
+//            ->where('timestamp', '>=', Carbon::now())
+//            ->where('timestamp', '<=', Carbon::now())
+            ->get()
+            ->groupBy('user_id');
 
+        $users = User::query()->whereIn('id', $movementsByUser->keys()->toArray())->get();
+
+        $xCoordinates = [0, 10];
+        $yCoordinates = [0, 10];
+        $usersInSquare = Movement::query()
+//            ->with('user')
+            ->whereIn('x_value', $xCoordinates)
+            ->whereIn('y_value', $yCoordinates)
+            // floor filter
+//          ->where('floor_label', 1);
+            ->get();
+
+//        $byWealthCategories =
+//        dd($usersInSquare->);
+//        dd($movementsByUser, $users);
+        return $movementsByUser;
     }
 }
