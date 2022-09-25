@@ -44,6 +44,16 @@
                                 </select>
                             </div>
 
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Floor</span>
+                                <select class="form-select" id="filterFloorInput" onchange="filterFloorChange()">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </div>
+
                             <button type="button" class="btn btn-primary btn" onclick="applyFilters()">Apply</button>
                         </div>
                     </div>
@@ -53,19 +63,6 @@
 
 
                     <div class="col-lg-3 card">
-                        <div class="card-header card_heada text-center">
-                            Floors
-                        </div>
-                        <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between">
-                            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                            </select>
-
-                            <button type="button" class="btn btn-primary">Upload floor schema</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -87,6 +84,7 @@
 @push('scripts')
     <script defer>
         var filterObject = {
+            floor: 1,
             from: null,
             to: null,
             age: null,
@@ -107,6 +105,10 @@
 
         function filterGenderChange() {
             filterObject.gender = document.getElementById('filterGenderInput').value
+        }
+
+        function filterFloorChange() {
+            filterObject.floor = document.getElementById('filterFloorInput').value
         }
 
         function applyFilters() {
