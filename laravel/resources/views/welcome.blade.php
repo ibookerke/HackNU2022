@@ -13,7 +13,10 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+        <!-- Load d3.js -->
+        <script src="https://d3js.org/d3.v4.js"></script>
+        <!-- Load color palettes -->
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
         @stack('css')
 
     </head>
@@ -21,6 +24,7 @@
 
         <div id="map" class="container" style="width: 100%; height: 100%"></div>
 
+        <x-heatmap :matrix="$matrix"/>
         <x-main_modal />
 
 

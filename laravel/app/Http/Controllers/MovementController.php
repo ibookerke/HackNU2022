@@ -27,7 +27,7 @@ class MovementController extends Controller
 
     public function index()
     {
-        return view('welcome');
+        return view('welcome', ['matrix' => $this->fetchHeatMapData()]);
     }
 
     public function run()
@@ -284,31 +284,29 @@ class MovementController extends Controller
     public function fetchHeatMapData()
     {
         $movementsByUser = Movement::query()
-            ->select('user_id', 'x_value', 'y_value', 'floor_label', 'timestamp')
-            ->orderBy('timestamp')
-            // floor filter
-//            ->where('floor_label', 1)
-            // timestamp filter
-//            ->where('timestamp', '>=', Carbon::now())
-//            ->where('timestamp', '<=', Carbon::now())
+            ->select('user_id', 'x_value', 'y_value', 'floor_label', 'timestamp', 'identifier')
+            ->where('floor_label', 3)
             ->get()
-            ->groupBy('user_id');
+            ->groupBy([
+                function ($item) {
+                    return floor($item->y_value / 10);
+                },
+                function ($item) {
+                    return floor($item->x_value / 10);
+                },
+                function ($item) {
+                    return $item->identifier;
+                }
+            ]);
+        $data = $movementsByUser->toArray();
 
-        $users = User::query()->whereIn('id', $movementsByUser->keys()->toArray())->get();
+        $matrix = array();
+        foreach (range(0,9) as $row) {
+            foreach (range(0,9) as $col) {
+                $matrix[$row][$col] = isset($data[$row][$col]) ? count($data[$row][$col]) : 0;
+            }
+        }
 
-        $xCoordinates = [0, 10];
-        $yCoordinates = [0, 10];
-        $usersInSquare = Movement::query()
-//            ->with('user')
-            ->whereIn('x_value', $xCoordinates)
-            ->whereIn('y_value', $yCoordinates)
-            // floor filter
-//          ->where('floor_label', 1);
-            ->get();
-
-//        $byWealthCategories =
-//        dd($usersInSquare->);
-//        dd($movementsByUser, $users);
-        return $movementsByUser;
+        return $matrix;
     }
 }
