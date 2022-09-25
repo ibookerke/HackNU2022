@@ -2,7 +2,10 @@
     'matrix' => []
 ])
 
-<div id="my_dataviz"></div>
+<div style="position: relative">
+  <img src="/canvas/1.png" style="position:absolute;top:0;left:0;z-index:1; height: 390px; width: 390px; margin: 30px" />
+  <div id="my_dataviz" style="position:relative;z-index:5;opacity: 70%"></div>
+</div>
 
 <script defer>
     const data = @json($matrix);
