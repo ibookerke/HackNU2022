@@ -16,6 +16,8 @@
 
         <script src="https://unpkg.com/@googlemaps/js-api-loader@1.0.0/dist/index.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js" integrity="sha512-NLtnLBS9Q2w7GKK9rKxdtgL7rA7CAS85uC/0xd9im4J/yOL4F9ZVlv634NAM7run8hz3wI2GabaA6vv8vJtHiQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
@@ -24,6 +26,7 @@
     </head>
     <body style="width: 100vw; height: 100vh">
         <div id="map" style="width: 100%; height: 100%"></div>
+        <x-heatmap :matrix="$matrix"/>
         <script>
             const apiOptions = {
                 apiKey: 'AIzaSyAIWHrDVstufAUU7oYtTMvAeUkFF0muki8',
