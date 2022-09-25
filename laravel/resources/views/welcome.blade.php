@@ -22,11 +22,22 @@
     </head>
     <body style="width: 100vw; height: 100vh">
 
-{{--        <div id="map" class="container" style="width: 100%; height: 100%"></div>--}}
+        <div id="map" style="width: 100%; height: 100%"></div>
         <x-main_modal/>
 
 
         <x-berkut_map />
         @stack('scripts')
+        <script>
+            addEventListener("keydown", (event) => {
+                if (event.isComposing || event.keyCode === 229) {
+                    return;
+                }
+                if(event.keyCode === 13) {
+                    document.getElementById('launch_btn').click()
+                }
+                // do something
+            });
+        </script>
     </body>
 </html>
