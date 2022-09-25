@@ -1,6 +1,5 @@
-@props(['matrix'])
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button onclick="heatmap()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
     Launch demo modal
 </button>
 
@@ -30,6 +29,7 @@
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon1">Age</span>
                                 <select class="form-select" id="filterAgeInput" onchange="filterAgeChange()">
+                                    <option value="">Select age group</option>
                                     <option value="1">12-20</option>
                                     <option value="2">20-40</option>
                                     <option value="3">40+</option>
@@ -38,6 +38,7 @@
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon1">Gender</span>
                                 <select class="form-select" id="filterGenderInput" onchange="filterGenderChange()">
+                                    <option value="">Select gender</option>
                                     <option value="1">Male</option>
                                     <option value="2">Female</option>
                                     <option value="3">Other</option>
@@ -59,7 +60,7 @@
                     </div>
 
 
-                    <x-heatmap :matrix="$matrix"/>
+                    <x-heatmap/>
 
 
                     <div class="col-lg-3 card">
@@ -92,7 +93,7 @@
         }
 
         function filterChangeFromDate(e) {
-            filterObject.from = e.target.value;
+            filterObject.fromm = e.target.value;
         }
 
         function filterChangeToData(e) {
@@ -113,6 +114,7 @@
 
         function applyFilters() {
             console.log(filterObject)
+            fetchHeatmapData(filterObject.floor, filterObject.age, filterObject.gender, filterObject.fromm, filterObject.to)
         }
     </script>
 @endpush

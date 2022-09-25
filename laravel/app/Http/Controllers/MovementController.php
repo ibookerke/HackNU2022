@@ -6,6 +6,7 @@ use App\Enums\WealthCategories;
 use App\Models\Movement;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class MovementController extends Controller
 {
@@ -27,7 +28,7 @@ class MovementController extends Controller
 
     public function index()
     {
-        return view('welcome', ['matrix' => $this->fetchHeatMapData()]);
+        return view('welcome');
     }
 
     public function run()
@@ -280,13 +281,31 @@ class MovementController extends Controller
         ];
     }
 
-
-    public function fetchHeatMapData()
-    {
+    public function heatmap($content) {
         $movementsByUser = Movement::query()
+            ->leftJoin('users', 'movements.user_id', '=', 'users.id')
             ->select('user_id', 'x_value', 'y_value', 'floor_label', 'timestamp', 'identifier')
-            ->where('floor_label', 3)
-            ->get()
+            ->where('floor_label', $content->floor ?? 1);
+
+        if (isset($content->gender)) {
+            $movementsByUser->where('users.gender', $content->gender);
+        }
+        if (isset($content->age)) {
+            $ageGroups = [
+                '1' => [12, 20],
+                '2' => [20, 40],
+                '3' => [40, 100],
+            ];
+            $movementsByUser->whereBetween('users.age', $ageGroups[$content->age]);
+        }
+        if (isset($content->from)) {
+            $movementsByUser->where('timestamp', '>=',$content->from);
+        }
+        if (isset($content->to)) {
+            $movementsByUser->where('timestamp', '<=',$content->to);
+        }
+
+        $data = $movementsByUser->get()
             ->groupBy([
                 function ($item) {
                     return floor($item->y_value / 10);
@@ -297,8 +316,7 @@ class MovementController extends Controller
                 function ($item) {
                     return $item->identifier;
                 }
-            ]);
-        $data = $movementsByUser->toArray();
+            ])->toArray();
 
         $matrix = array();
         foreach (range(0,9) as $row) {
@@ -308,5 +326,10 @@ class MovementController extends Controller
         }
 
         return $matrix;
+    }
+
+    public function fetchHeatMapData(Request $request)
+    {
+        return $this->heatmap(json_decode($request->getContent()));
     }
 }

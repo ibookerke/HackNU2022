@@ -23,7 +23,7 @@
     <body style="width: 100vw; height: 100vh">
 
 {{--        <div id="map" class="container" style="width: 100%; height: 100%"></div>--}}
-        <x-main_modal :matrix="$matrix"/>
+        <x-main_modal/>
 
 
         <x-berkut_map />

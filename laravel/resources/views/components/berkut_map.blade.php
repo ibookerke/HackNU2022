@@ -75,7 +75,7 @@
 
             const cube = new THREE.Mesh(geometry, material);
             cube.rotation.z = ROTATION;
-            console.log(x);
+            // console.log(x);
             cube.position.x = CUBIK_INITIAL.x + (x * WIDTH) / CUBIK_NUM_X;
             cube.position.y = CUBIK_INITIAL.y + (y * LENGTH) / CUBIK_NUM_Y;
             cube.position.z = CUBIK_INITIAL.z + z * HEIGHT;

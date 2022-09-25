@@ -20,4 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::get('getHeatMapData', [MovementController::class, 'fetchHeatMapData']);
+Route::post('getHeatMapData', [MovementController::class, 'fetchHeatMapData'])->name('getHeatMapData');
+Route::post('heatmap', [MovementController::class, 'heatmap'])->name('heatmap');
