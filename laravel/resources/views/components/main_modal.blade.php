@@ -1,3 +1,4 @@
+@props(['matrix'])
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
     Launch demo modal
@@ -48,9 +49,7 @@
                     </div>
 
 
-                    <div style="width: 300px; height: 300px; background: red; width: 35%!important;">
-                        <!-- TODO insert HeatMap -->
-                    </div>
+                    <x-heatmap :matrix="$matrix"/>
 
 
                     <div class="col-lg-3 card">
